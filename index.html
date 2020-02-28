@@ -13,11 +13,53 @@
     <div class="py-5 text-center">
         <h1>TLV shop</h1>
         <p class="lead">Buy stickers atomically over the Lightning Network</p>
+        <div class="mb-5"></div>
+
+        <p>
+            Welcome to <a href="https://tlvshop.com">tlvshop.com</a>!
+            <br/><br/>
+            This is not an ordinary webshop. There is no browser, no shopping cart,
+            no checkout page and no credit card required. What is it then? It is a 100%
+            pure Lightning shop, possibly one of the first of its kind.
+            <br/><br/>
+            The current offering is rather limited. In fact the only article that we
+            currently sell is a set of ten cool "RUN LND" stickers.
+            <br/><br/>
+            There are no prices either. The sticker market fluctuates and bitcoin
+            fluctuates, so it would all get too complicated for us humble operators of this
+            experimental project that aims to demonstrate the future of online shopping.
+            <br/><br/>
+            So what does it mean, pure Lightning? It means that the only communication
+            between buyer and us is a Lightning payment. Since the introduction of custom
+            tlv records (hence the name <a href="https://tlvshop.com">tlvshop.com</a>), it is possible to attach
+            arbitrary data to a payment. We use this new functionality to attach your delivery
+            address to the payment.
+            <br/><br/>
+            In short this means that you can order, pay for and get your stickers delivered
+            with just a single <code>lncli</code> command. And more importantly, your identity will
+            remain hidden. Obviously only if you don't get your stickers delivered to your
+            home address...
+            <br/><br/>
+            To make it easy to place an order, we provide a <code>lncli</code> command line generator
+            below. Please note that none of what you enter there is sent out on the network directly.
+            You could download this page and run it offline to be absolutely sure.
+            <br/><br/>
+            Back to the question of price. It is simple. We only take your money if the
+            amount is sufficient for us to cover the cost. Otherwise we'll cancel back your
+            HTLC. So there is some price discovery going on. If you don't like that,
+            remember that easy isn't always the most fun.
+            <br/><br/>
+            Also, make sure you enter your address correctly. As you remain anonymous,
+            we can't refund. And also not verify any claims of something going wrong. So in
+            short, all of this is reckless and we only guarantee to make the best of it.
+            <br/><br/>
+            Happy buying!
+        </p>
     </div>
 
     <div class="row">
-        <div class="col-md-8 order-md-1 offset-md-2">
-            <h4 class="mb-3">Billing address</h4>
+        <div class="col-md-12">
+            <h4 class="mb-3">Delivery address</h4>
             <form class="needs-validation" novalidate id="orderform">
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -80,6 +122,22 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="city">City</label>
+                    <input type="text" class="form-control" id="city" placeholder="">
+                    <div class="invalid-feedback">
+                        Please enter a valid city.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="amount">Amount (sats)</label>
+                    <input type="number" class="form-control" id="amount" placeholder="find out">
+                    <div class="invalid-feedback">
+                        Please enter a valid amount in satoshis.
+                    </div>
+                </div>
+
+                <div class="mb-3">
                     <label for="email">Email <span class="text-muted">(Optional)</span></label>
                     <input type="email" class="form-control" id="email" placeholder="you@example.com">
                     <div class="invalid-feedback">
@@ -90,8 +148,17 @@
             </form>
         </div>
 
-        <div class="col-md-8 order-md-1 offset-md-2">
+        <div class="col-md-12">
+            <h4 class="mb-3">The command to run</h4>
+            <p>
+                All you need to do is to run the following command. If the payment succeeds, the order is submitted.
+                If not, try a different price and/or make sure you are able to pay on mainnet.
+            </p>
             <kbd id="command"></kbd>
+
+            <div class="pb-5"></div>
+            <div class="pb-5"></div>
+            <div class="pb-5"></div>
         </div>
 
     </div>
@@ -111,18 +178,47 @@
 
 <script>
 
-    const command = 'lncli sendpayment --keysend ';
+    const dataTypeShippingAddress = 98117121;
+    const destinationPubkey = "<coming soon>";
+    const command = `lncli sendpayment --keysend --dest ${destinationPubkey}`;
+
 
     // country/state script by IshanDemon, visit github.com/IshanDemon
     populateCountries("country", "state");
 
     $(document).ready(function () {
         $('#command').text(command);
-        $('#orderform input').change(function () {
-            let cmd = `${command} --data=`;
+        $('#orderform input').keyup(function () {
+            let firstName = $('#firstName').val();
+            let lastName = $('#lastName').val();
+            let address = $('#address').val();
+            let address2 = $('#address2').val();
+            let zip = $('#zip').val();
+            let state = $('#state').val();
+            let country = $('#country').val();
+            let city = $('#city').val();
+            let email = $('#email').val();
+            let addr = [
+                `${firstName} ${lastName}`,
+                address, address2,
+                `${state} ${zip} ${city}`,
+                country,
+                email
+            ].join('\n');
+            let amount = $('#amount').val();
+            let cmd = `${command} --data ${dataTypeShippingAddress}=${toHex(addr)} --amt ${amount}`;
+            console.log('Raw: ' + addr + ', encoded: ' + toHex(addr));
             $('#command').text(cmd);
         });
     });
+
+    function toHex(str) {
+        let h = '';
+        for (let i = 0; i < str.length; i++) {
+            h += '' + str.charCodeAt(i).toString(16)
+        }
+        return h
+    }
 </script>
 </body>
 </html>
