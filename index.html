@@ -3,6 +3,7 @@
     <title>TLV shop - buy stickers atomically over the Lightning Network</title>
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
@@ -155,8 +156,10 @@
                 If not, try a different price and/or make sure you are able to pay on mainnet.
             </p>
             <kbd id="command"></kbd>
+            <textarea id="command-hidden" class="sr-only"></textarea>
 
             <div class="pb-5"></div>
+            <button class="btn btn-secondary" id="copy">Copy command to clipboard</button>
             <div class="pb-5"></div>
             <div class="pb-5"></div>
         </div>
@@ -179,7 +182,7 @@
 <script>
 
     const dataTypeShippingAddress = 98117121;
-    const destinationPubkey = "<coming soon>";
+    const destinationPubkey = "023e18169f9b4253eff56bd7035660b28c95e61e12fabc03f4aef59d102d55bbb0";
     const command = `lncli sendpayment --keysend --dest ${destinationPubkey}`;
 
 
@@ -204,11 +207,18 @@
                 `${state} ${zip} ${city}`,
                 country,
                 email
-            ].join('\n');
+            ].join('|');
             let amount = $('#amount').val();
             let cmd = `${command} --data ${dataTypeShippingAddress}=${toHex(addr)} --amt ${amount}`;
-            console.log('Raw: ' + addr + ', encoded: ' + toHex(addr));
             $('#command').text(cmd);
+            $('#command-hidden').text(cmd);
+        });
+
+        $('#copy').click(function() {
+            const cmdEl = document.getElementById('command-hidden');
+            cmdEl.select();
+            cmdEl.setSelectionRange(0, 99999);
+            document.execCommand('copy');
         });
     });
 
