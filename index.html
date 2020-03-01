@@ -192,7 +192,7 @@
 
     $(document).ready(function () {
         update();
-        $('#orderform input').keyup(update).change(update);
+        $('#orderform input,select').keyup(update).change(update);
 
         $('#copy').click(function () {
             const cmdEl = document.getElementById('command-hidden');
