@@ -24,7 +24,8 @@
             pure Lightning shop, possibly one of the first of its kind.
             <br/><br/>
             The current offering is rather limited. In fact the only article that we
-            currently sell is a set of ten cool "RUN LND" stickers.
+            currently sell is a set of three cool "RUN LND" stickers:<br/>
+            <img src="runlnd.jpg" alt="RUN LND" width="300" style="margin: 15px">
             <br/><br/>
             There are no prices either. The sticker market fluctuates and bitcoin
             fluctuates, so it would all get too complicated for us humble operators of this
@@ -190,31 +191,10 @@
     populateCountries("country", "state");
 
     $(document).ready(function () {
-        $('#command').text(command);
-        $('#orderform input').keyup(function () {
-            let firstName = $('#firstName').val();
-            let lastName = $('#lastName').val();
-            let address = $('#address').val();
-            let address2 = $('#address2').val();
-            let zip = $('#zip').val();
-            let state = $('#state').val();
-            let country = $('#country').val();
-            let city = $('#city').val();
-            let email = $('#email').val();
-            let addr = [
-                `${firstName} ${lastName}`,
-                address, address2,
-                `${state} ${zip} ${city}`,
-                country,
-                email
-            ].join('|');
-            let amount = $('#amount').val();
-            let cmd = `${command} --data ${dataTypeShippingAddress}=${toHex(addr)} --amt ${amount}`;
-            $('#command').text(cmd);
-            $('#command-hidden').text(cmd);
-        });
+        update();
+        $('#orderform input').keyup(update).change(update);
 
-        $('#copy').click(function() {
+        $('#copy').click(function () {
             const cmdEl = document.getElementById('command-hidden');
             cmdEl.select();
             cmdEl.setSelectionRange(0, 99999);
@@ -222,12 +202,41 @@
         });
     });
 
+    function update() {
+        let firstName = $('#firstName').val();
+        let lastName = $('#lastName').val();
+        let address = $('#address').val();
+        let address2 = $('#address2').val();
+        let zip = $('#zip').val();
+        let state = $('#state').val();
+        let country = $('#country').val();
+        let city = $('#city').val();
+        let email = $('#email').val();
+        let addr = [
+            `${firstName} ${lastName}`,
+            address, address2,
+            `${state} ${zip} ${city}`,
+            country,
+            email
+        ].join('|');
+        let amount = $('#amount').val();
+        let cmd = `${command} --data ${dataTypeShippingAddress}=${toHex(addr)} --amt ${amount}`;
+        $('#command').text(cmd);
+        $('#command-hidden').text(cmd);
+    }
+
     function toHex(str) {
-        let h = '';
-        for (let i = 0; i < str.length; i++) {
-            h += '' + str.charCodeAt(i).toString(16)
+        let hex = '';
+        try {
+            hex = unescape(encodeURIComponent(str))
+                .split('').map(function (v) {
+                    return v.charCodeAt(0).toString(16)
+                }).join('')
+        } catch (e) {
+            hex = str;
+            console.log('invalid text input: ' + str)
         }
-        return h
+        return hex
     }
 </script>
 </body>
