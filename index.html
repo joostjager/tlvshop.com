@@ -239,7 +239,7 @@
         let amount = $('#amount').val();
         $('#data').val(addr);
         let cmd = '';
-        if (!firstName || !lastName || !address || !zip || !state || !country || !city) {
+        if (!firstName || !lastName || !address || !zip || !amount || !country || !city) {
             cmd = '<please fill in all required fields first>';
         } else {
             cmd = `${command} --data ${dataTypeShippingAddress}=${toHex(addr)} --amt ${amount}`;
