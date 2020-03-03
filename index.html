@@ -66,14 +66,14 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="firstName">First name</label>
-                        <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                        <input type="text" class="form-control" id="firstName" required>
                         <div class="invalid-feedback">
                             Valid first name is required.
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="lastName">Last name</label>
-                        <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                        <input type="text" class="form-control" id="lastName" required>
                         <div class="invalid-feedback">
                             Valid last name is required.
                         </div>
@@ -98,7 +98,6 @@
                         <label for="country">Country</label>
                         <select class="custom-select d-block w-100" id="country" required>
                             <option value="">Choose...</option>
-                            <option>United States</option>
                         </select>
                         <div class="invalid-feedback">
                             Please select a valid country.
@@ -108,7 +107,6 @@
                         <label for="state">State</label>
                         <select class="custom-select d-block w-100" id="state" required>
                             <option value="">Choose...</option>
-                            <option>California</option>
                         </select>
                         <div class="invalid-feedback">
                             Please provide a valid state.
@@ -116,7 +114,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="zip">Zip</label>
-                        <input type="text" class="form-control" id="zip" placeholder="" required>
+                        <input type="text" class="form-control" id="zip" required>
                         <div class="invalid-feedback">
                             Zip code required.
                         </div>
@@ -125,7 +123,7 @@
 
                 <div class="mb-3">
                     <label for="city">City</label>
-                    <input type="text" class="form-control" id="city" placeholder="">
+                    <input type="text" class="form-control" id="city">
                     <div class="invalid-feedback">
                         Please enter a valid city.
                     </div>
@@ -152,8 +150,14 @@
 
         <div class="col-md-12">
             <h4 class="mb-3">The command to run</h4>
+
+            <div class="mb-3">
+                <label for="data">This is the raw order data that will be sent along with the payment:</label>
+                <input type="text" class="form-control" id="data" disabled aria-disabled="true">
+            </div>
             <p>
-                All you need to do is to run the following command. If the payment succeeds, the order is submitted.
+                All you need to do is to run the following command which will send a "keysend" payment with the order
+                data encoded in hex. If the payment succeeds, the order is submitted.
                 If not, try a different price and/or make sure you are able to pay on mainnet.
             </p>
             <kbd id="command"></kbd>
@@ -203,23 +207,24 @@
     });
 
     function update() {
-        let firstName = $('#firstName').val();
-        let lastName = $('#lastName').val();
-        let address = $('#address').val();
-        let address2 = $('#address2').val();
-        let zip = $('#zip').val();
-        let state = $('#state').val();
+        let firstName = $('#firstName').val() || '<empty>';
+        let lastName = $('#lastName').val() || '<empty>';
+        let address = $('#address').val() || '<empty>';
+        let address2 = $('#address2').val() || '';
+        let zip = $('#zip').val() || '<empty>';
+        let state = $('#state').val() || '<empty>';
         let country = $('#country').val();
-        let city = $('#city').val();
-        let email = $('#email').val();
+        let city = $('#city').val() || '<empty>';
+        let email = $('#email').val() || '<empty>';
         let addr = [
             `${firstName} ${lastName}`,
             address, address2,
             `${state} ${zip} ${city}`,
-            country,
+            (country === "-1") ? '<empty>' : country,
             email
         ].join('|');
         let amount = $('#amount').val();
+        $('#data').val(addr);
         let cmd = `${command} --data ${dataTypeShippingAddress}=${toHex(addr)} --amt ${amount}`;
         $('#command').text(cmd);
         $('#command-hidden').text(cmd);
