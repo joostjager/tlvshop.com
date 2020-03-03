@@ -213,14 +213,14 @@
         let address2 = $('#address2').val() || '';
         let zip = $('#zip').val() || '<empty>';
         let state = $('#state').val() || '<empty>';
-        let country = $('#country').val();
+        let country = $('#country').val() || '<empty>';
         let city = $('#city').val() || '<empty>';
         let email = $('#email').val() || '<empty>';
         let addr = [
             `${firstName} ${lastName}`,
             address, address2,
             `${state} ${zip} ${city}`,
-            (country === "-1") ? '<empty>' : country,
+            country,
             email
         ].join('|');
         let amount = $('#amount').val();
