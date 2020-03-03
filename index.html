@@ -217,15 +217,15 @@
     });
 
     function update() {
-        let firstName = $('#firstName').val() || '<empty>';
-        let lastName = $('#lastName').val() || '<empty>';
-        let address = $('#address').val() || '<empty>';
-        let address2 = $('#address2').val() || '';
-        let zip = $('#zip').val() || '<empty>';
-        let state = $('#state').val() || '<empty>';
-        let country = $('#country').val() || '<empty>';
-        let city = $('#city').val() || '<empty>';
-        let email = $('#email').val() || '<empty>';
+        let firstName = $('#firstName').val();
+        let lastName = $('#lastName').val();
+        let address = $('#address').val();
+        let address2 = $('#address2').val();
+        let zip = $('#zip').val();
+        let state = $('#state').val();
+        let country = $('#country').val();
+        let city = $('#city').val();
+        let email = $('#email').val();
         let addr = [
             `${firstName} ${lastName}`,
             address, address2,
@@ -235,7 +235,12 @@
         ].join('|');
         let amount = $('#amount').val();
         $('#data').val(addr);
-        let cmd = `${command} --data ${dataTypeShippingAddress}=${toHex(addr)} --amt ${amount}`;
+        let cmd = '';
+        if (!firstName || !lastName || !address || !zip || !state || !country || !city) {
+            cmd = '<please fill in all required fields first>';
+        } else {
+            cmd = `${command} --data ${dataTypeShippingAddress}=${toHex(addr)} --amt ${amount}`;
+        }
         $('#command').text(cmd);
         $('#command-hidden').text(cmd);
     }
