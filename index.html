@@ -14,7 +14,16 @@
     <div class="py-5">
         <div class="text-center">
             <h1>Welcome to <a href="https://tlvshop.com">tlvshop.com</a>!</h1>
-            <p class="lead">Buy stickers atomically over the Lightning Network</p>
+            <p class="lead">
+                Buy stickers atomically over the Lightning Network
+                <br/><br/>
+                <span style="color: red">
+                    <strong>Update April 15 2020</strong>:
+                    This was an interesting experiment, thanks to everyone who participated. We ran out of stickers and
+                    have now disabled the shop. While this website still works, you won't be able to order stickers
+                    anymore.
+                </span>
+            </p>
         </div>
         <div class="mb-5"></div>
 
@@ -200,7 +209,7 @@
 <script>
 
     const dataTypeShippingAddress = 98117121;
-    const destinationPubkey = "023e18169f9b4253eff56bd7035660b28c95e61e12fabc03f4aef59d102d55bbb0";
+    const destinationPubkey = "<node_pubkey>";
     const command = `lncli sendpayment --keysend --dest ${destinationPubkey}`;
 
 
