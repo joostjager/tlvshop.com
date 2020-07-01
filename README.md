@@ -8,7 +8,7 @@ This repository contains:
 
 ## Set up
 
-* In order to use the acceptor, you need to build the `lnd` master branch with `tags="invoicesrpc"`. [Interactive keysend acceptance](https://github.com/lightningnetwork/lnd/pull/4167/commits) isn't included in a stable release yet, but will likely be part of the upcoming 0.11 version. Don't forget that running master on mainnet comes with additional risks and isn't recommended.
+* In order to use the acceptor, you need to build the `lnd` master branch with `tags="invoicesrpc"`. [Interactive keysend acceptance](https://github.com/lightningnetwork/lnd/pull/4167) isn't included in a stable release yet, but will likely be part of the upcoming 0.11 version. Don't forget that running master on mainnet comes with additional risks and isn't recommended.
 
 * Start `lnd` with `--accept-keysend --keysend-hold-time=10s`. The keysend hold time specifies how long `lnd` should hold on to the payment before automatically cancelling. During this time frame, the acceptor has the time to decide what to do with the payment (cancel immediately or settle).
 
