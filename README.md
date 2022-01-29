@@ -2,7 +2,7 @@
 
 This repository contains:
 
-* `/`: Client side html/javascript to generate a `lncli` order command. This page can be displayed offline if desired. It is currently hosted at https://tlvshop.com.
+* `/`: Client side html/javascript to generate a `lncli` order command. This page can be displayed offline if desired. It was hosted at tlvshop.com but now there is a domain placeholder.
 
 * `/acceptor`: A tool that interfaces with your `lnd` node and makes sure that only payments above a set value are accepted.
 
